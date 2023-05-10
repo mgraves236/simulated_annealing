@@ -80,7 +80,7 @@ solution simulatedAnnealing(int** array, int const n) {
 	std::cout << "best " << best << '\n';
 
 	// stop condition
-	int iterMax = 5;
+	int iterMax = 10000;
 	int	iter = 0;
 
 	int* temp;
@@ -88,9 +88,9 @@ solution simulatedAnnealing(int** array, int const n) {
 	while (iter < iterMax) {
 		// get random solution from the neighbourhood
 		temp = randomSwap(schedule, n);
-		printSchedule(temp, n);
+//		printSchedule(temp, n);
 		int tSum = tardinessSum(array, temp, n);
-		std::cout << "T_Sum " << tSum << '\n';
+//		std::cout << "T_Sum " << tSum << '\n';
 		if (tSum < best) {
 			copyArray(schedule, temp, n);
 		} else if (p(schedule, temp, n, T, array) >= random.nextFloat(.0,1.0)) {
@@ -103,8 +103,12 @@ solution simulatedAnnealing(int** array, int const n) {
 		T = alpha * T;
 		iter++;
 	}
-	std::cout << best << "\t";
-	printSchedule(bestSchedule, n);
+//	std::cout << best << "\t";
+//	printSchedule(bestSchedule, n);
+	solution sol{};
+	sol.schedule = bestSchedule;
+	sol.tardinessSum = best;
+	return sol;
 }
 
 #endif //SIMULATED_ANNEALING_SIMULATEDANNEALING_H
