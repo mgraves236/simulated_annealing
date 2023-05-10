@@ -39,5 +39,20 @@ int** initialize_instance(int seed, int n) {
 	return jobs;
 }
 
+int tardinessSum(int** matrix, int* array, int n) {
+		int prevS = 0;
+		int prevC = 0;
+		int sum = 0;
+		int currentJob = 0;
+		for (int i = 0; i < n; i++) {
+			currentJob = array[i];
+			std::cout << "Current job:" << currentJob << '\n';
+			int currentC = prevC + matrix[currentJob][0];
+			int tardiness = currentC - matrix[currentJob][2];
+			std::cout << tardiness;
+
+		}
+}
+
 
 #endif //SIMULATED_ANNEALING_SINGLEMACHINE_H
