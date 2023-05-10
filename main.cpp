@@ -4,7 +4,7 @@
 
 int main() {
 	int** jobs;
-	int const n = 10; // number of jobs
+	int const n = 4; // number of jobs
 	jobs = initialize_instance(89528, n);
 	printInstance(jobs, n);
 	solution sol = simulatedAnnealing(jobs, n);

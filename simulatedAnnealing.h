@@ -33,8 +33,24 @@ void copyArray(int* copy, int* org, int const n) {
 	}
 }
 
+double getInitialTemperature(int** array, int* schedule, int n) {
+	double pIni = 0.65;
+	int* temp;
+	temp = new int[n];
+	copyArray(temp, schedule, n);
+	int min = INT_MAX;
+	int max = 0;
+
+	for (int i = 0; i < 1000; i++) {
+		std::shuffle(temp, temp + n, std::mt19937(std::random_device()()));
+		int sum = tardinessSum(array, temp, n);
+		if (sum < min) min = sum;
+		if (sum > max) max = sum;
+	}
+	return - (-min+max) / log(pIni);
+}
+
 int* randomSwap(int* array, int const n) {
-	// make a copy of the array
 	int* temp;
 	temp = new int[n];
 	copyArray(temp, array, n);
@@ -42,11 +58,9 @@ int* randomSwap(int* array, int const n) {
 	// get two random indexes that will be swapped
 	int index1 = random.nextInt(0, n - 1);
 	int index2 = random.nextInt(0, n - 1);
-//	std::cout << "indeces  " <<  index1 << "     " << index2 << '\n';
 	while (index2 ==  index1) {
 		index2 = random.nextInt(0, n - 1);
 	}
-//	std::cout << "indecesp  " <<  index1 << "     " << index2 << '\n';
 
 	// perform swap
 	temp[index1] = array[index2];
@@ -59,7 +73,7 @@ double p(int* array, int* temp, int n, double t, int** matrix) {
 	int old = tardinessSum(matrix, array, n);
 	int prob = tardinessSum(matrix, array, n);
 
-	float p = exp((- (double) prob - (double) old) / t);
+	double p = exp(-((double) prob - (double) old) / t);
 	return p;
 }
 solution simulatedAnnealing(int** array, int const n) {
@@ -70,8 +84,8 @@ solution simulatedAnnealing(int** array, int const n) {
 	}
 	// initial solution is a random permutation
 	std::shuffle(schedule, schedule + n, std::mt19937(std::random_device()()));
-
-	double T = 10;
+	double T = getInitialTemperature(array, schedule, n);
+//	double T = 10;
 	double alpha = 0.96;
 	int best = 	tardinessSum(array, schedule, n);
 	int* bestSchedule;
@@ -80,17 +94,17 @@ solution simulatedAnnealing(int** array, int const n) {
 	std::cout << "best " << best << '\n';
 
 	// stop condition
-	int iterMax = 10000;
+	int iterMax = 100000;
 	int	iter = 0;
+	double TMin = T / 100;
+
 
 	int* temp;
 	temp = new int[n];
 	while (iter < iterMax) {
 		// get random solution from the neighbourhood
 		temp = randomSwap(schedule, n);
-//		printSchedule(temp, n);
 		int tSum = tardinessSum(array, temp, n);
-//		std::cout << "T_Sum " << tSum << '\n';
 		if (tSum < best) {
 			copyArray(schedule, temp, n);
 		} else if (p(schedule, temp, n, T, array) >= random.nextFloat(.0,1.0)) {
@@ -103,8 +117,6 @@ solution simulatedAnnealing(int** array, int const n) {
 		T = alpha * T;
 		iter++;
 	}
-//	std::cout << best << "\t";
-//	printSchedule(bestSchedule, n);
 	solution sol{};
 	sol.schedule = bestSchedule;
 	sol.tardinessSum = best;
