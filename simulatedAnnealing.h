@@ -17,7 +17,7 @@ struct solution {
 	int tardinessSum;
 };
 
-RandomNumberGenerator random = RandomNumberGenerator(9862486458);
+RandomNumberGenerator random = RandomNumberGenerator(925486458);
 
 
 void printSchedule(int* array, int const n) {
@@ -68,6 +68,63 @@ int* randomSwap(int* array, int const n) {
 
 	return temp;
 }
+
+int* randomInsert(int* array, int const n) {
+	int* temp;
+	temp = new int[n - 1];
+	// get a random index
+	int index = random.nextInt(0, n - 1);
+
+	// delete element from array
+	int size = 0;
+	int i = 0;
+	while (size < n - 1) {
+		if (i == index) {
+			i++;
+			continue;
+		}
+		temp[size] = array[i];
+		size++;
+		i++;
+	}
+
+	// insert at randomized index
+	int* temp2;
+	temp2 = new int[n];
+	int insert = random.nextInt(0, n - 2);
+
+	size = 0;
+	i = 0;
+	while (size < n) {
+		if (i == insert) {
+			temp2[i] = array[index];
+		} else {
+			temp2[i] = temp[size];
+			size++;
+		}
+		i++;
+	}
+	return temp2;
+}
+
+int* adjacentInterchange(int* array, int const n) {
+	int* temp;
+	temp = new int[n];
+	copyArray(temp, array, n);
+	// get a random index
+	int index = random.nextInt(0, n - 1);
+	// always perform swap forward
+	if (index == n - 1) {
+		temp[index] = array[0];
+		temp[0] = array[index];
+	} else {
+		temp[index] = array[index + 1];
+		temp[index + 1] = array[index];
+	}
+
+	return temp;
+}
+
 // acceptance function
 double p(int* array, int* temp, int n, double t, int** matrix) {
 	int old = tardinessSum(matrix, array, n);
@@ -94,16 +151,19 @@ solution simulatedAnnealing(int** array, int const n) {
 	std::cout << "best " << best << '\n';
 
 	// stop condition
-	int iterMax = 100000;
+	int iterMax = 100;
 	int	iter = 0;
+	int iterNoEnhc = 0;
 	double TMin = T / 100;
 
 
 	int* temp;
 	temp = new int[n];
-	while (iter < iterMax) {
+	while (iterNoEnhc < iterMax) {
 		// get random solution from the neighbourhood
-		temp = randomSwap(schedule, n);
+		temp = adjacentInterchange(schedule, n);
+//		temp = randomInsert(schedule, n);
+//		temp = randomSwap(schedule, n);
 		int tSum = tardinessSum(array, temp, n);
 		if (tSum < best) {
 			copyArray(schedule, temp, n);
@@ -113,8 +173,11 @@ solution simulatedAnnealing(int** array, int const n) {
 		if (tSum < best) {
 			best = tSum;
 			copyArray(bestSchedule, schedule, n);
+		} else if (tSum == best) {
+			iterNoEnhc++;
 		}
 		T = alpha * T;
+
 		iter++;
 	}
 	solution sol{};
