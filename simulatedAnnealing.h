@@ -133,7 +133,7 @@ double p(int* array, int* temp, int n, double t, int** matrix) {
 	double p = exp(-((double) prob - (double) old) / t);
 	return p;
 }
-solution simulatedAnnealing(int** array, int const n) {
+solution simulatedAnnealing(int** array, int const n, int neighborhood) {
 	// randomize first permutation
 	int schedule[n];
 	for (int i = 0; i < n; i++) {
@@ -148,10 +148,10 @@ solution simulatedAnnealing(int** array, int const n) {
 	int* bestSchedule;
 	bestSchedule = new int[n];
 	copyArray(bestSchedule, schedule, n);
-	std::cout << "best " << best << '\n';
+//	std::cout << "best " << best << '\n';
 
 	// stop condition
-	int iterMax = 100;
+	int iterMax = 10000;
 	int	iter = 0;
 	int iterNoEnhc = 0;
 	double TMin = T / 100;
@@ -159,11 +159,11 @@ solution simulatedAnnealing(int** array, int const n) {
 
 	int* temp;
 	temp = new int[n];
-	while (iterNoEnhc < iterMax) {
+	while (iter < iterMax) {
 		// get random solution from the neighbourhood
-		temp = adjacentInterchange(schedule, n);
-//		temp = randomInsert(schedule, n);
-//		temp = randomSwap(schedule, n);
+		if (neighborhood == 0) temp = adjacentInterchange(schedule, n);
+		if (neighborhood == 1) temp = randomInsert(schedule, n);
+		if (neighborhood == 2) temp = randomSwap(schedule, n);
 		int tSum = tardinessSum(array, temp, n);
 		if (tSum < best) {
 			copyArray(schedule, temp, n);
