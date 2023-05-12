@@ -12,23 +12,19 @@
  * 					n < 12 : iterMax > 10 ;
  * 					n = 12 : 3
  * 					n > 12 : iterMax = 8
+ * Initial temperature: depending on instance
+ *
  *
  */
 int main() {
 	int** jobs;
-	int const n = 13; // number of jobs
+	int const n = 17; // number of jobs
 	jobs = initialize_instance(89528, n);
 	printInstance(jobs, n);
-	solution sol = simulatedAnnealing(jobs, n, 1, 250000, false);
+	solution sol = simulatedAnnealing(jobs, n, 1, 250000, false, 0, 0.965);
 	std::cout << "Best schedule:\t";
 	printSchedule(sol.schedule, n);
-	std::cout << "Cost:\t" << sol.tardinessSum;
-	sol = simulatedAnnealing(jobs, n, 1, 8, true);
-	std::cout << "Best schedule:\t";
-	printSchedule(sol.schedule, n);
-	std::cout << "Cost:\t" << sol.tardinessSum;
-//	testNeighborhood();
-//	testIteration();
-//	testIterationVersion();
+	std::cout << "Cost:\t" << sol.tardinessSum << '\n';
+	delete[] jobs;
 	return 0;
 }

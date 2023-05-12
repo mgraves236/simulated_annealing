@@ -133,7 +133,7 @@ double p(int* array, int* temp, int n, double t, int** matrix) {
 	double p = exp(-((double) prob - (double) old) / t);
 	return p;
 }
-solution simulatedAnnealing(int** array, int const n, int neighborhood, int iterMax, bool stagnation) {
+solution simulatedAnnealing(int** array, int const n, int neighborhood, int iterMax, bool stagnation, double t, double alpha) {
 	// randomize first permutation
 	int schedule[n];
 	for (int i = 0; i < n; i++) {
@@ -141,9 +141,11 @@ solution simulatedAnnealing(int** array, int const n, int neighborhood, int iter
 	}
 	// initial solution is a random permutation
 	std::shuffle(schedule, schedule + n, std::mt19937(std::random_device()()));
-	double T = getInitialTemperature(array, schedule, n);
-//	double T = 10;
-	double alpha = 0.96;
+//	double T = getInitialTemperature(array, schedule, n);
+
+	double T = t;
+	if (T == 0) T = getInitialTemperature(array, schedule, n);
+
 	int best = 	tardinessSum(array, schedule, n);
 	int* bestSchedule;
 	bestSchedule = new int[n];
@@ -153,7 +155,6 @@ solution simulatedAnnealing(int** array, int const n, int neighborhood, int iter
 	// stop condition
 	int	iter = 0;
 	double TMin = T / 100;
-
 
 	int* temp;
 	temp = new int[n];

@@ -69,7 +69,73 @@ if __name__ == "__main__":
     plt.xlabel("number of iterations")
     plt.ylabel("result")
     plt.plot(iter_arr, v_arr, label="Maximum number of iterations = 250 000")
-    plt.plot(iter_arr, duration_arr, label="Maximum stagnation = 10")
+    plt.plot(iter_arr, duration_arr, label="Maximum stagnation,\nnumber depending on instance")
+    plt.legend()
+
+    plt.figure(6)
+    n_arr = []
+    value_arr = []
+    with open('temperature.txt') as data:
+        for line in data:
+            row = line.split()
+            if row:
+                value_arr.append(float(row[1]))
+                n_arr.append(int(row[0]))
+
+    plt.title("Result vs. Initial temperature")
+    plt.xlabel("temperature")
+    plt.ylabel("result")
+    plt.plot(n_arr, value_arr)
+
+    plt.figure(7)
+    iter_arr = []
+    v_arr = []
+    duration_arr = []
+    with open('temperatureVersion2.txt') as data:
+        for line in data:
+            row = line.split()
+            if row:
+                v_arr.append(float(row[1]))
+                iter_arr.append(int(row[0]))
+                duration_arr.append(float(row[2]))
+    plt.title("Result vs. Size")
+    plt.xlabel("size")
+    plt.ylabel("result")
+    plt.plot(iter_arr, v_arr, label="Initial temperature = 7")
+    plt.plot(iter_arr, duration_arr, label="Initial temperature from equation")
+    plt.legend()
+
+    plt.figure(8)
+    n_arr = []
+    value_arr = []
+    with open('alpha200.txt') as data:
+        for line in data:
+            row = line.split()
+            if row:
+                value_arr.append(float(row[1]))
+                n_arr.append(float(row[0]))
+
+    plt.title("Result vs. Alpha")
+    plt.xlabel("alpha")
+    plt.ylabel("result")
+    plt.plot(n_arr, value_arr)
+
+    plt.figure(9)
+    iter_arr = []
+    v_arr = []
+    duration_arr = []
+    with open('compare.txt') as data:
+        for line in data:
+            row = line.split()
+            if row:
+                v_arr.append(float(row[1]))
+                iter_arr.append(int(row[0]))
+                duration_arr.append(float(row[2]))
+    plt.title("Result vs. Size")
+    plt.xlabel("size")
+    plt.ylabel("result")
+    plt.plot(iter_arr, v_arr, label="Not calibrated")
+    plt.plot(iter_arr, duration_arr, label="calibrated")
     plt.legend()
 
 
