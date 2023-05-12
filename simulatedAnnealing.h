@@ -176,7 +176,8 @@ solution simulatedAnnealing(int** array, int const n, int neighborhood, int iter
 			if (stagnation) iter++;
 		}
 		T = alpha * T;
-
+//		T = T - 0.1;
+//		if (T <= 0) iter = iterMax;
 		if (!stagnation) iter++;
 	}
 	solution sol{};

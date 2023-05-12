@@ -105,7 +105,7 @@ void testTemperatureVersion() {
 		double sumN = 0;
 		double sum = 0;
 		for (int i = 0; i < 10; i++) {
-			jobs = initialize_instance(89528, n);
+			jobs = initialize_instance(89528 * i, n);
 			sol = simulatedAnnealing(jobs, n, 1, 250000, false, 7, 0.95);
 			sum += sol.tardinessSum;
 			sol = simulatedAnnealing(jobs, n, 1, 250000, false, 0, 0.95);
@@ -139,6 +139,27 @@ void testAlpha() {
 		}
 		file << sum / 10 << '\n';
 		alpha += 0.005;
+	}
+	file.close();
+}
+
+void testCooling() {
+	std::fstream file;
+	file.open("cooling1.txt", std::ios::out);
+	int **jobs;
+	int maxSize = 40;
+	solution sol{};
+	for (int j = 3; j < maxSize + 1; j++) {
+		std::cout << "n = \t" << j << '\n';
+		int const n = j; // number of jobs
+		file << n << '\t';
+		double sum = 0;
+		for (int i = 0; i < 10; i++) {
+			jobs = initialize_instance(89528 * i, n);
+			sol = simulatedAnnealing(jobs, n, 1, 250000, false, 0, 0.965);
+			sum += sol.tardinessSum;
+		}
+		file << sum / 10 << '\n';
 	}
 	file.close();
 }
